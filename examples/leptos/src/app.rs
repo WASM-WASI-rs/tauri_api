@@ -35,7 +35,7 @@ fn Core() -> impl IntoView {
     let (converted_path, set_converted_path) = create_signal("".to_string());
 
     let do_convert_path = move |_| {
-        let converted = tauri_sys::core::convert_file_src(convert_path());
+        let converted = tauri_api::core::convert_file_src(convert_path());
         set_converted_path(converted);
     };
 
@@ -62,13 +62,13 @@ fn Events() -> impl IntoView {
     let (emit_count, set_emit_count) = create_signal(0);
 
     spawn_local(async move {
-        let mut listener = tauri_sys::event::listen::<i32>("event::listen")
+        let mut listener = tauri_api::event::listen::<i32>("event::listen")
             .await
             .unwrap();
 
         while let Some(event) = listener.next().await {
             tracing::debug!(?event);
-            let tauri_sys::event::Event {
+            let tauri_api::event::Event {
                 event: _,
                 id: _,
                 payload,
@@ -78,13 +78,13 @@ fn Events() -> impl IntoView {
     });
 
     spawn_local(async move {
-        let mut listener = tauri_sys::event::listen::<i32>("event::emit")
+        let mut listener = tauri_api::event::listen::<i32>("event::emit")
             .await
             .unwrap();
 
         while let Some(event) = listener.next().await {
             tracing::debug!(?event);
-            let tauri_sys::event::Event {
+            let tauri_api::event::Event {
                 event: _,
                 id: _,
                 payload,
@@ -95,13 +95,13 @@ fn Events() -> impl IntoView {
 
     let trigger_listen_events = move |_| {
         spawn_local(async move {
-            tauri_sys::core::invoke::<()>("trigger_listen_events", &()).await;
+            tauri_api::core::invoke::<()>("trigger_listen_events", &()).await;
         });
     };
 
     let trigger_emit_event = move |_| {
         spawn_local(async move {
-            tauri_sys::event::emit("event::emit", &emit_count.with_untracked(|n| n + 1))
+            tauri_api::event::emit("event::emit", &emit_count.with_untracked(|n| n + 1))
                 .await
                 .unwrap();
         });
@@ -152,8 +152,8 @@ fn Window() -> impl IntoView {
 
 #[component]
 fn WindowWindows() -> impl IntoView {
-    let current_window = create_action(|_| async move { tauri_sys::window::get_current() });
-    let all_windows = create_action(|_| async move { tauri_sys::window::get_all() });
+    let current_window = create_action(|_| async move { tauri_api::window::get_current() });
+    let all_windows = create_action(|_| async move { tauri_api::window::get_all() });
 
     let refresh = move |_| {
         current_window.dispatch(());
@@ -204,22 +204,22 @@ fn WindowWindows() -> impl IntoView {
 #[component]
 fn WindowMonitors() -> impl IntoView {
     let current_monitor =
-        create_action(|_| async move { tauri_sys::window::current_monitor().await });
+        create_action(|_| async move { tauri_api::window::current_monitor().await });
 
     let primary_monitor =
-        create_action(|_| async move { tauri_sys::window::primary_monitor().await });
+        create_action(|_| async move { tauri_api::window::primary_monitor().await });
 
     let available_monitors =
-        create_action(|_| async move { tauri_sys::window::available_monitors().await });
+        create_action(|_| async move { tauri_api::window::available_monitors().await });
 
     let monitor_from_point = create_action(|(x, y): &(isize, isize)| {
         let x = x.clone();
         let y = y.clone();
-        async move { tauri_sys::window::monitor_from_point(x, y).await }
+        async move { tauri_api::window::monitor_from_point(x, y).await }
     });
 
     // let cursor_position =
-    //     create_action(|_| async move { tauri_sys::window::cursor_position().await });
+    //     create_action(|_| async move { tauri_api::window::cursor_position().await });
 
     let refresh = move |_| {
         current_monitor.dispatch(());
@@ -343,12 +343,12 @@ fn WindowMonitors() -> impl IntoView {
 
 #[component]
 fn WindowEvents() -> impl IntoView {
-    use tauri_sys::window::{DragDropEvent, DragDropPayload, DragOverPayload};
+    use tauri_api::window::{DragDropEvent, DragDropPayload, DragOverPayload};
 
     let (count, set_count) = create_signal(0);
     let increment_count = create_action(|count: &usize| {
         let count = count.clone();
-        let window = tauri_sys::window::get_current();
+        let window = tauri_api::window::get_current();
         async move {
             web_sys::console::debug_1(&"0".into());
             window.emit("count", count).await.unwrap();
@@ -358,7 +358,7 @@ fn WindowEvents() -> impl IntoView {
     let (drag_drop, set_drag_drop) = create_signal(().into_view());
 
     spawn_local(async move {
-        let mut window = tauri_sys::window::get_current();
+        let mut window = tauri_api::window::get_current();
         let mut listener = window.listen::<usize>("count").await.unwrap();
         while let Some(event) = listener.next().await {
             set_count(event.payload);
@@ -366,7 +366,7 @@ fn WindowEvents() -> impl IntoView {
     });
 
     spawn_local(async move {
-        let window = tauri_sys::window::get_current();
+        let window = tauri_api::window::get_current();
         let mut listener = window.on_drag_drop_event().await.unwrap();
         while let Some(event) = listener.next().await {
             match event.payload {
@@ -448,7 +448,7 @@ fn WindowEvents() -> impl IntoView {
 }
 
 #[component]
-fn Monitor<'a>(monitor: &'a tauri_sys::window::Monitor) -> impl IntoView {
+fn Monitor<'a>(monitor: &'a tauri_api::window::Monitor) -> impl IntoView {
     view! {
         <div style="display: inline-block; text-align: left;">
             <div>"Name: " {monitor.name().clone()}</div>
@@ -465,9 +465,9 @@ fn Menu() -> impl IntoView {
     let menu = create_local_resource(
         || (),
         move |_| async move {
-            let menu = tauri_sys::menu::Menu::with_id("tauri-sys-menu").await;
-            let mut item_open = tauri_sys::menu::item::MenuItem::with_id("Open", "open").await;
-            let mut item_close = tauri_sys::menu::item::MenuItem::with_id("Close", "close").await;
+            let menu = tauri_api::menu::Menu::with_id("tauri-sys-menu").await;
+            let mut item_open = tauri_api::menu::item::MenuItem::with_id("Open", "open").await;
+            let mut item_close = tauri_api::menu::item::MenuItem::with_id("Close", "close").await;
             menu.append_item(&item_open).await.unwrap();
             menu.append_item(&item_close).await.unwrap();
 
@@ -495,7 +495,7 @@ fn Menu() -> impl IntoView {
 
     let default_menu = move |e: MouseEvent| {
         spawn_local(async move {
-            let menu = tauri_sys::menu::Menu::default().await;
+            let menu = tauri_api::menu::Menu::default().await;
         });
     };
 

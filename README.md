@@ -22,7 +22,11 @@ This crate is not yet published to crates.io, so you need to use it from git.
 
 You also need a global installation of [`esbuild`].
 
-Note: this project targets the tauri v2 api only. For WASM bindings to Tauri version 1, see [tauri v1 api].
+Note: this project targets the Tauri v2 api only. For WASM bindings to Tauri version 1, see [tauri v1 api].
+
+## Setup
+
+Add the following to the `Cargo.toml` in the root of your Tauri project (ie. not the Cargo.toml file in the `src-tauri` directory):
 
 ```toml
 tauri_api = { git = "https://github.com/wasm-wasi-rs/tauri_api", branch = "main" }
