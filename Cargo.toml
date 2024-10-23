@@ -1,0 +1,59 @@
+[package]
+edition = "2021"
+name = "tauri_api"
+
+# Bump lib crate version
+# version = "0.2.0"
+version = "0.3.0"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+# derive_more = "0.99.18"
+derive_more = "1.0.0"
+
+# futures = { version = "0.3.30", optional = true }
+futures = { version = "0.3.31", optional = true }
+
+# js-sys = "0.3.69"
+js-sys = "0.3.72"
+
+# log = "0.4.21"
+log = "0.4.22"
+
+# serde = {version = "1.0.203", features = ["derive"]}
+serde = {version = "1.0.210", features = ["derive"]}
+
+serde-wasm-bindgen = "0.6.5"
+
+serde_repr = "0.1.19"
+
+# thiserror = "1.0.61"
+thiserror = "1.0.64"
+
+# wasm-bindgen = "0.2.92"
+wasm-bindgen = "0.2.95"
+
+# wasm-bindgen-futures = "0.4.42"
+wasm-bindgen-futures = "0.4.45"
+
+[dev-dependencies]
+tauri_api = {path = ".", features = ["all"]}
+
+# wasm-bindgen-test = "0.3.42"
+wasm-bindgen-test = "0.3.45"
+
+
+[package.metadata.docs.rs]
+all-features = true
+
+[features]
+all = ["core", "dpi", "event", "menu", "window"]
+core = []
+dpi = []
+event = ["dep:futures"]
+menu = ["core", "window"]
+window = ["dpi", "event"]
+
+[workspace]
+members = ["examples/test", "examples/test/src-tauri", "examples/leptos", "examples/leptos/src-tauri"]
