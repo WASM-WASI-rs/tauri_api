@@ -18,10 +18,14 @@
 
 ## Installation
 
-This crate is not yet published to crates.io, so you need to use it from git. You also need a global installation of [`esbuild`].
+This crate is not yet published to crates.io, so you need to use it from git.
+
+You also need a global installation of [`esbuild`].
+
+Note: this project targets the tauri v2 api only. For WASM bindings to Tauri version 1, see [tauri v1 api].
 
 ```toml
-tauri_api = { git = "https://github.com/WASM-WASI-rs/tauri_api", branch = "main" } // tauri v2 api
+tauri_api = { git = "https://github.com/wasm-wasi-rs/tauri_api", branch = "main" }
 ```
 
 ## Usage
@@ -77,5 +81,6 @@ The current API also very closely mirrors the JS API even though that might not 
 The [`examples/leptos`] crate provides examples of how to use most of the implemented functionality.
 
 [wasm-bindgen]: https://github.com/rustwasm/wasm-bindgen
-[tauri allowlist]: https://tauri.app/v1/api/config#allowlistconfig
+[tauri allowlist]: https://tauri.app/reference/config/
 [`esbuild`]: https://esbuild.github.io/getting-started/#install-esbuild
+[tauri v1 api]: https://github.com/JonasKruckenberg/tauri-sys/tree/main
