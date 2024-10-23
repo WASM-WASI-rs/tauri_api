@@ -10,7 +10,7 @@ version = "0.3.0"
 
 [dependencies]
 # derive_more = "0.99.18"
-derive_more = "1.0.0"
+derive_more = { version = "1.0.0", features = ["full"]}
 
 # futures = { version = "0.3.30", optional = true }
 futures = { version = "0.3.31", optional = true }
@@ -56,4 +56,4 @@ menu = ["core", "window"]
 window = ["dpi", "event"]
 
 [workspace]
-members = ["examples/test", "examples/test/src-tauri", "examples/leptos", "examples/leptos/src-tauri"]
+# members = []

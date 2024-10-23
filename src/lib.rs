@@ -2,7 +2,7 @@
 //!
 //! Tauri is a framework for building tiny, blazing fast, and secure cross-platform applications.
 //! Developers can integrate any front-end framework that compiles to HTML, JS and CSS for building their user interface.
-//! The backend of the application is a rust binary, leveraging the [`tauri`] crate.
+//! The backend of the application is a rust binary, leveraging the [\`tauri\`] crate.
 //!
 //! This crate contains idiomatic rust bindings to the backend, for usage within Rust projects that target wasm32-unknown-unknown,
 //! for example Rust frontend frameworks such as [`yew`](https://yew.rs), [`sycamore`](https://sycamore-rs.netlify.app) or [`dominator`](https://github.com/Pauan/rust-dominator).
@@ -13,13 +13,13 @@
 //!
 //! ## Event Listeners
 //!
-//! Event Listeners, such as [`event::listen`] module,
-//! are modeled as async streams of data using the [`futures::Stream`] trait instead of using callbacks.
+//! Event Listeners, such as `event::listen` module,
+//! are modeled as async streams of data using the `futures::Stream` trait instead of using callbacks.
 //! Streams have multiple advantages over callbacks:
 //!
 //! #### Stream Combinators
 //!
-//! Streams are essentially the async equivalent of the standard [`Iterator`] and therefore expose a very similar set of combinator functions.
+//! Streams are essentially the async equivalent of the standard `Iterator` and therefore expose a very similar set of combinator functions.
 //! This means streams are much more versatile and ergonomic than simple callbacks.
 //!
 //! #### Automatic cleanup
@@ -31,8 +31,7 @@
 //! async fn process_some_errors() {
 //!     let win = WebviewWindow::get_by_label("main").unwrap();
 //!
-//!     let errors = win.listen("tauri://error").await?
-//!         .take(3);
+//!     let errors = win.listen("tauri://error").await?.take(3);
 //!
 //!     while let Some(err) = errors.next().await {
 //!         log::error!("Something bad happened! {}", err)
@@ -68,7 +67,7 @@
 //! ```
 //!
 //! But if the Rust event stream only gets detached when the stream get's dropped, how can we cancel the stream at will?
-//! We can make use of the combinators and utility functions offered by the [`futures`] crate again, namely the [`futures::stream::Abortable`] type:
+//! We can make use of the combinators and utility functions offered by the `futures` crate again, namely the `futures::stream::Abortable` type:
 //!
 //! ```rust
 //! use tauri_api::event::listen;
@@ -84,6 +83,9 @@
 //! // in some other task, when we're done with listening to the events
 //! abort_handle.abort();
 //! ```
+//!
+//!
+//! [\`tauri\`]: https://docs.rs/tauri/latest/tauri/
 
 mod error;
 #[cfg(feature = "event")]
