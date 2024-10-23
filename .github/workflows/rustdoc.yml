@@ -45,10 +45,10 @@ jobs:
         uses: actions-rs/cargo@v1
         with:
           command: doc
-          args: -p tauri-sys --all-features --no-deps
+          args: -p tauri_api --all-features --no-deps
           
       - name: Create index.html
-        run: echo '<meta http-equiv="refresh" content="0; url=tauri_sys">' > ./target/doc/index.html
+        run: echo '<meta http-equiv="refresh" content="0; url=tauri_api">' > ./target/doc/index.html
           
       - name: Setup Pages
         uses: actions/configure-pages@v4
