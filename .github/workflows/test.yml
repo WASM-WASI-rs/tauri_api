@@ -38,8 +38,7 @@ jobs:
 
     - name: Install Tauri CLI
       run: |
-        wget -qO-
-        https://github.com/tauri-apps/tauri/releases/download/tauri-cli-v2.0.4/cargo-tauri-x86_64-unknown-linux-gnu.tgz| tar -xzf- -C ~/.cargo/bin
+        wget -qO- https://github.com/tauri-apps/tauri/releases/download/tauri-cli-v2.0.4/cargo-tauri-x86_64-unknown-linux-gnu.tgz| tar -xzf- -C ~/.cargo/bin
 
     - name: Install Trunk
       run: |
