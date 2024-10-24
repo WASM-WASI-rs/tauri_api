@@ -27,7 +27,7 @@ jobs:
     steps:
     - name: Install stable toolchain
       run: |
-        sudo apt-get install rust
+        sudo apt-get install rustup
         rustup target add wasm32-unknown-unknown
 
     - uses: Swatinem/rust-cache@v2
