@@ -25,9 +25,8 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
-    - name: Install stable toolchain
+    - name: Install wasm toolchain for rust
       run: |
-        # sudo apt-get install rustup
         rustup target add wasm32-unknown-unknown
 
     - uses: Swatinem/rust-cache@v2
@@ -35,17 +34,20 @@ jobs:
       run: |
         sudo apt-get update
         sudo apt-get install -y webkit2gtk-4.0 at-spi2-core
+
     - name: Install Tauri CLI
       run: |
         cd examples/test
         wget -qO-
         https://github.com/tauri-apps/tauri/releases/download/tauri-cli-v2.0.4/cargo-tauri-x86_64-unknown-linux-gnu.tgz| tar -xzf- -C ~/.cargo/bin
+
     - name: Install Trunk
       run: |
         cd examples/test
         wget -qO- https://github.com/trunk-rs/trunk/releases/download/v0.21.1/trunk-x86_64-unknown-linux-gnu.tar.gz | tar -xzf- -C ~/.cargo/bin
+
     - name: Run test app
       run: |
-        cd examples/test
+        cd ./examples/test
         export CARGO_UNSTABLE_SPARSE_REGISTRY=true
         xvfb-run cargo tauri dev --exit-on-panic --config ./src-tauri/ci.tauri.conf.json
